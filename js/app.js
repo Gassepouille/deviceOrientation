@@ -21,8 +21,7 @@ var APP = {
 
 		var radius = 20;
 
-		APP.controls = new THREE.DeviceOrientationControls2( compass.object3d );
-
+		APP.controls = new THREE.DeviceOrientationControls2( compass.object3d, camera.object3d );
 
 		// set the focus of the camera toward the center of the scene
 		camera.object3d.lookAt(scene.position);

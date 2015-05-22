@@ -5,11 +5,12 @@
  * W3C Device Orientation control (http://w3c.github.io/deviceorientation/spec-source-orientation.html)
  */
 
-THREE.DeviceOrientationControls2 = function ( object ) {
+THREE.DeviceOrientationControls2 = function ( object, camera) {
 
 	var scope = this;
 
 	this.object = object;
+	this.camera = camera
 	// this.object.rotation.reorder( "YXZ" );
 
 	this.enabled = true;
@@ -33,31 +34,14 @@ THREE.DeviceOrientationControls2 = function ( object ) {
 
 	var setObjectQuaternion = function () {
 
-		var zee = new THREE.Vector3( 0, 0, 1 );
+		// var zee = new THREE.Vector3( 0, 0, 1 );
+		var zee = new THREE.Vector3( 0, 0, -1 );
 
 		var euler = new THREE.Euler();
 
-		var q0 = new THREE.Quaternion();
+		var qScreenRotation = new THREE.Quaternion();
 
-		var q1 = new THREE.Quaternion( - Math.sqrt( 0.5 ), 0, 0, Math.sqrt( 0.5 ) ); // - PI/2 around the x-axis
-
-		return function ( quaternion, alpha, beta, gamma, orient ) {
-			// euler.set( beta, alpha, - gamma, 'YXZ' );                       // 'ZXY' for the device, but 'YXZ' for us
-
-			// Works only if we move only along x axis
-			// euler.set( -beta, 0, - 0, 'XYZ' );
-			// Works only if we move only along z axis
-			// euler.set( 0, 0, -alpha, 'XYZ' );
-			// Works only if we move only along y axis
-			// euler.set( 0, -gamma, 0, 'XYZ' );
-
-			// Gimball effect on the euler rotation created 
-			// euler.set( -beta, -gamma, -alpha, 'XYZ' );
-
-			// quaternion.setFromEuler( euler );                               // orient the device
-			// quaternion.multiply( q1 );
-
-
+		return function ( quaternion, cameraRotation, alpha, beta, gamma, orient ) {
 			// Rotation constructed directly with quaternion to prevent the Gimbal effect
 			// from https://dev.opera.com/articles/w3c-device-orientation-usage/
 			// "Using quaternion"
@@ -74,10 +58,7 @@ THREE.DeviceOrientationControls2 = function ( object ) {
 			var sY = Math.sin( _y/2 );
 			var sZ = Math.sin( _z/2 );
 
-			//
 			// ZXY quaternion construction.
-			//
-
 			var w = cX * cY * cZ - sX * sY * sZ;
 			var x = sX * cY * cZ - cX * sY * sZ;
 			var y = cX * sY * cZ + sX * cY * sZ;
@@ -85,11 +66,21 @@ THREE.DeviceOrientationControls2 = function ( object ) {
 
 			quaternion.set(-x, -y, -z,w);
 
-			quaternion.multiply( q0.setFromAxisAngle( zee, - orient ) ); 
+			// Screen rotation code with quaternion
+
+			// var minusHalfAngle = -orient / 2;
+
+			// qScreenRotation.set(0,0,Math.sin(minusHalfAngle),Math.cos(minusHalfAngle));
+			// quaternion.multiply(qScreenRotation); 
+			// quaternion.multiply( qScreenRotation.setFromAxisAngle( zee,  -orient ) ); 
+			
+
+			// Works if camera on Z axis
+			cameraRotation.set(0,0,-orient);
+
 		}
 
 	}();
-
 	this.connect = function() {
 
 		onScreenOrientationChangeEvent(); // run once on load
@@ -119,7 +110,7 @@ THREE.DeviceOrientationControls2 = function ( object ) {
 		var gamma  = scope.deviceOrientation.gamma ? THREE.Math.degToRad( scope.deviceOrientation.gamma ) : 0; // Y''
 		var orient = scope.screenOrientation       ? THREE.Math.degToRad( scope.screenOrientation       ) : 0; // O
 
-		setObjectQuaternion( scope.object.quaternion, alpha, beta, gamma, orient );
+		setObjectQuaternion( scope.object.quaternion, scope.camera.rotation,alpha, beta, gamma, orient );
 
 	};
 

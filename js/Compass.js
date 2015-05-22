@@ -8,7 +8,6 @@ function Compass (){
 	var material = new THREE.MeshLambertMaterial( {color: 0xff0000} );
 	var geometry = new THREE.TorusGeometry( 10, 1, 4, 10 );				
 	var torus= new THREE.Mesh( geometry, material );
-	torus.rotation.set(Math.PI*0.5,0,0);
 	this.object3d.add(torus)
 
 	// North - South hand
@@ -16,7 +15,6 @@ function Compass (){
 	var material = new THREE.MeshLambertMaterial( {color: 0x0000ff} );
 	var cylinder = new THREE.Mesh( geometry, material );
 	cylinder.position.set(0,0,3);
-	cylinder.rotation.set(Math.PI*0.5,0,0);
 	this.object3d.add(cylinder)
 
 	// East - West hand
@@ -29,7 +27,7 @@ function Compass (){
 	var geometry = new THREE.TorusKnotGeometry( 8, 1, 50, 16 );
 	var material = new THREE.MeshNormalMaterial();
 	var mesh = new THREE.Mesh( geometry, material );
-	this.object3d = mesh;
+	// this.object3d = mesh;
 
 	// Device orientation listener to display value in html
 	window.addEventListener( 'deviceorientation', function(event){
