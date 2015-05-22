@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1, user-scalable=no">
+	<title>test Orientation API</title>
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<div id="title">Orientation device API</div>
+	<div id="alpha"></div>
+	<div id="beta"></div>
+	<div id="gamma"></div>
+	<div id="orientation"></div>
+	<script src="libraries/three.min.js"></script>
+	<script src="libraries/DeviceOrientationControls.js"></script>
+	<script src="libraries/DeviceOrientationControls2.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/Renderer.js"></script>
+	<script src="js/Camera.js"></script>
+	<script src="js/Light.js"></script>
+	<script src="js/Compass.js"></script>
+	<script src="js/Engine.js"></script>
+	<script>
+		window.onload = (function(){
+    		APP.init();
+		})();
+	</script>
+</body>
+</html>
