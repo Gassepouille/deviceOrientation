@@ -44,29 +44,24 @@ THREE.DeviceOrientationControls2 = function ( object ) {
 		return function ( quaternion, alpha, beta, gamma, orient ) {
 			// euler.set( beta, alpha, - gamma, 'YXZ' );                       // 'ZXY' for the device, but 'YXZ' for us
 
-
 			// Works only if we move only along x axis
 			// euler.set( -beta, 0, - 0, 'XYZ' );
-
 			// Works only if we move only along z axis
 			// euler.set( 0, 0, -alpha, 'XYZ' );
-			
 			// Works only if we move only along y axis
 			// euler.set( 0, -gamma, 0, 'XYZ' );
 
-
-			// euler.set( -beta, -gamma, 0, 'XYZ' );
 			// Gimball effect on the euler rotation created 
 			// euler.set( -beta, -gamma, -alpha, 'XYZ' );
 
-			// quaternion.multiply( q1 );
-
 			// quaternion.setFromEuler( euler );                               // orient the device
-
-			// quaternion.set(-beta, -gamma, -alpha,1);
+			// quaternion.multiply( q1 );
 
 
 			// Rotation constructed directly with quaternion to prevent the Gimbal effect
+			// from https://dev.opera.com/articles/w3c-device-orientation-usage/
+			// "Using quaternion"
+			// "Q.1: Converting deviceorientation angles to a Unit Quaternion representation"
 
 			var _x = beta; // beta value
 			var _y = gamma; // gamma value
@@ -89,6 +84,8 @@ THREE.DeviceOrientationControls2 = function ( object ) {
 			var z = cX * cY * sZ + sX * sY * cZ;
 
 			quaternion.set(-x, -y, -z,w);
+
+			quaternion.multiply( q0.setFromAxisAngle( zee, - orient ) ); 
 		}
 
 	}();
