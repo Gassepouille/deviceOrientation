@@ -76,7 +76,7 @@ THREE.DeviceOrientationControls2 = function ( object, camera) {
 			
 
 			// Works if camera on Z axis
-			cameraRotation.set(0,0,-orient);
+			if(orient)cameraRotation.set(0,0,-orient);
 
 		}
 
