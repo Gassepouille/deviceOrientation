@@ -35,13 +35,13 @@ THREE.DeviceOrientationControls2 = function ( object, camera) {
 	var setObjectQuaternion = function () {
 
 		// var zee = new THREE.Vector3( 0, 0, 1 );
-		var zee = new THREE.Vector3( 0, 0, -1 );
-
-		var euler = new THREE.Euler();
+		var zee = new THREE.Vector3( 0, 0, 1 );
 
 		var qScreenRotation = new THREE.Quaternion();
 
-		return function ( quaternion, cameraRotation, alpha, beta, gamma, orient ) {
+		var q0 = new THREE.Quaternion();
+
+		return function ( quaternion, qCamera, alpha, beta, gamma, orient ) {
 			// Rotation constructed directly with quaternion to prevent the Gimbal effect
 			// from https://dev.opera.com/articles/w3c-device-orientation-usage/
 			// "Using quaternion"
@@ -64,19 +64,13 @@ THREE.DeviceOrientationControls2 = function ( object, camera) {
 			var y = cX * sY * cZ + sX * cY * sZ;
 			var z = cX * cY * sZ + sX * sY * cZ;
 
-			quaternion.set(-x, -y, -z,w);
-
-			// Screen rotation code with quaternion
-
-			// var minusHalfAngle = -orient / 2;
-
-			// qScreenRotation.set(0,0,Math.sin(minusHalfAngle),Math.cos(minusHalfAngle));
-			// quaternion.multiply(qScreenRotation); 
-			// quaternion.multiply( qScreenRotation.setFromAxisAngle( zee,  -orient ) ); 
+			// quaternion.set(-x, -y, -z, w);
+			// qCamera.setFromAxisAngle(zee,  -orient);
 			
+			q0.set(-x, -y, -z, w);
 
-			// Works if camera on Z axis
-			if(orient)cameraRotation.set(0,0,-orient);
+			quaternion.setFromAxisAngle( zee,  orient );
+			quaternion.multiply(q0);
 
 		}
 
@@ -110,7 +104,7 @@ THREE.DeviceOrientationControls2 = function ( object, camera) {
 		var gamma  = scope.deviceOrientation.gamma ? THREE.Math.degToRad( scope.deviceOrientation.gamma ) : 0; // Y''
 		var orient = scope.screenOrientation       ? THREE.Math.degToRad( scope.screenOrientation       ) : 0; // O
 
-		setObjectQuaternion( scope.object.quaternion, scope.camera.rotation,alpha, beta, gamma, orient );
+		setObjectQuaternion( scope.object.quaternion, scope.camera.quaternion,alpha, beta, gamma, orient );
 
 	};
 
